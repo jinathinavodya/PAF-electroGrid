@@ -54,3 +54,17 @@ CREATE TABLE IF NOT EXISTS `bills` (
   `amount` double NOT NULL,
   PRIMARY KEY (`billID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+-- --------------------------------------------------------
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `userID` int(11) NOT NULL AUTO_INCREMENT,
+  `userName` varchar(20) NOT NULL,
+  `userNIC` varchar(20) NOT NULL,
+  `userPhoneNo` varchar(12) NOT NULL,
+  `userEmail` varchar(20) NOT NULL,
+  PRIMARY KEY (`userID`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
