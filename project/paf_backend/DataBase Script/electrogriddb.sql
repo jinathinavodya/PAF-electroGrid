@@ -67,7 +67,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `userPhoneNo` varchar(12) NOT NULL,
   `userEmail` varchar(20) NOT NULL,
   PRIMARY KEY (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+
 -- --------------------------------------------------------
 
 --
