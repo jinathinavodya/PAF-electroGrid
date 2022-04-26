@@ -38,3 +38,19 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `userID` int(11) NOT NULL,
   PRIMARY KEY (`accountID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bills`
+--
+
+DROP TABLE IF EXISTS `bills`;
+CREATE TABLE IF NOT EXISTS `bills` (
+  `billID` int(11) NOT NULL AUTO_INCREMENT,
+  `accountID` int(10) NOT NULL,
+  `unitUsage` int(11) NOT NULL,
+  `month` varchar(2) NOT NULL,
+  `year` varchar(4) NOT NULL,
+  `amount` double NOT NULL,
+  PRIMARY KEY (`billID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
