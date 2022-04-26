@@ -1,0 +1,254 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import utils.DBConnect;
+
+public class Bill {
+	
+	private DBConnect connection = new DBConnect();
+	
+	public String insertBill (String accountID, String unitUsage, String month, String year, String amount) {
+
+		String output ="";
+		
+		try {
+			
+			Connection con = connection.getConnection();
+			
+			if(con == null) {
+				return "Error while connecting to database";
+			}
+			
+			//create a prepared statement
+			String query = "INSERT INTO bills (`billID`, `accountID`, `unitUsage`, `month`, `year`, `amount`)"
+							+ "VALUES (?,?,?,?,?,?)";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			//binding values
+			preparedStmt.setInt(1, 0);
+			preparedStmt.setInt(2, Integer.parseInt (accountID));
+			preparedStmt.setInt(3, Integer.parseInt (unitUsage));
+			preparedStmt.setString(4, month);
+			preparedStmt.setString(5, year);
+			preparedStmt.setDouble(6, Double.parseDouble(amount));
+			
+			//execute statement
+			preparedStmt.execute();
+			con.close();
+			
+			output = "Bill Inserted Successfully!";
+			
+		} catch (Exception e) {
+			
+			output = "Error while inserting bill";
+			System.err.println(e.getMessage());
+		}
+		
+		return output;
+		
+	}
+	
+	public String readBills() {
+
+		String output = "";
+		
+		try {
+			Connection con = connection.getConnection();
+			
+			if(con == null) {
+				return "Error while connecting to database";
+			}
+			
+			//prepare the html table to be displayed
+			output= "<table border=\"1\">"
+					+ "		<tr>"
+					+ "			<th>Bill ID</th>"
+					+ "			<th>Account ID</th>"
+					+ "			<th>Unit Usage</th>"
+					+ "			<th>Year</th>"
+					+ "			<th>Month</th>"
+					+ "			<th>Amount</th>"
+					+ "		</tr>";
+			
+			String query = "SELECT * FROM bills";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			while(rs.next()) {
+				String billID = Integer.toString(rs.getInt("billID"));
+				String accountID = rs.getString("accountID");
+				String unitUsage = rs.getString("unitUsage");
+				String month  = rs.getString("month");
+				String year = rs.getString("year");
+				String amount  = Double.toString(rs.getDouble("amount"));
+				
+				//add a row into html table
+				output += "<tr>";
+				output += 	"<td>" + billID +  "</td>";
+				output += 	"<td>" + accountID +  "</td>";
+				output += 	"<td>" + unitUsage +  "</td>";
+				output += 	"<td>" + year +  "</td>";
+				output += 	"<td>" + month +  "</td>";
+				output += 	"<td>" + amount +  "</td>";
+				output += 	"</tr>";
+				
+			}
+			
+			con.close();
+			
+			//completing html table
+			output += 	"</table>";
+			
+		} 
+		catch (Exception e) 
+		{
+			output="Error while reading the bills.";
+			System.err.println(e.getMessage());
+		}
+		
+		return output;
+	}
+	
+	
+	public String readBill(String ID) {
+
+		String output = "";
+		
+		try {
+			Connection con = connection.getConnection();
+			
+			if(con == null) {
+				return "Error while connecting to database";
+			}
+			
+			//prepare the html table to be displayed
+			output= "<table border=\"1\">"
+					+ "		<tr>"
+					+ "			<th>Bill ID</th>"
+					+ "			<th>Account ID</th>"
+					+ "			<th>Unit Usage</th>"
+					+ "			<th>Year</th>"
+					+ "			<th>Month</th>"
+					+ "			<th>Amount</th>"
+					+ "		</tr>";
+			
+			String query = "SELECT * FROM bills WHERE billID="+ID;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			while(rs.next()) {
+				String billID = Integer.toString(rs.getInt("billID"));
+				String accountID = Integer.toString(rs.getInt("accountID"));
+				String unitUsage = Integer.toString(rs.getInt("unitUsage"));
+				String month  = rs.getString("month");
+				String year = rs.getString("year");
+				String amount  = Double.toString(rs.getDouble("amount"));
+				
+				//add a row into html table
+				output += "<tr>";
+				output += 	"<td>" + billID +  "</td>";
+				output += 	"<td>" + accountID +  "</td>";
+				output += 	"<td>" + unitUsage +  "</td>";
+				output += 	"<td>" + year +  "</td>";
+				output += 	"<td>" + month +  "</td>";
+				output += 	"<td>" + amount +  "</td>";
+				output += 	"</tr>";
+				
+			}
+			
+			con.close();
+			
+			//completing html table
+			output += 	"</table>";
+			
+		} 
+		catch (Exception e) 
+		{
+			output="Error while reading the bills.";
+			System.err.println(e.getMessage());
+		}
+		
+		return output;
+	}
+
+	public String deleteBill(String billID) {
+		String output="";
+		
+		try {
+			
+			Connection con = connection.getConnection();
+			if(con == null) {
+				return "Error while connecting to database for deleting";
+			}
+			
+			//create a prepared statement
+			String query = "DELETE FROM bills WHERE billID=?";
+			
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			//binding value
+			preparedStmt.setInt(1, Integer.parseInt(billID));
+			
+			//execute the statement
+			preparedStmt.execute();
+			con.close();
+			
+			output = "Deleted successfully.";
+			
+		} catch (Exception e) {
+			output = "Error while deleting the bill.";
+			System.err.println(e.getMessage());
+		}
+		
+		return output;
+	}
+	
+	public String updateBill(String ID, String accID, String unitUsage, String month, String year, String amount) {
+		
+		String output = "";
+		
+		try {
+			
+			
+			Connection con = connection.getConnection();
+			if(con == null) {
+				
+				return "Error connecting to database";
+			}
+			
+			String query = "UPDATE bills SET accountID=?, unitUsage=?, month=?, year=?, amount=? where billID=? ";
+			
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			//binding values
+			preparedStmt.setInt(1, Integer.parseInt (accID));
+			preparedStmt.setInt(2, Integer.parseInt (unitUsage));
+			preparedStmt.setString(3, month);
+			preparedStmt.setString(4, year);
+			preparedStmt.setDouble(5, Double.parseDouble(amount));
+			preparedStmt.setInt(6, Integer.parseInt(ID));
+			
+			 // execute the statement
+			 preparedStmt.execute();
+			 
+			 con.close();
+			 
+			 output = "Bill Updated successfully";
+			
+			
+		}catch(Exception e) {
+			
+			output = "Error while updating the bill.";
+			System.err.println(e.getMessage());
+			 
+		}
+		
+		
+		return output;
+	}
+
+}

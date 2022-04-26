@@ -1,0 +1,249 @@
+package model;
+
+import java.sql.*;
+
+import utils.DBConnect;
+
+public class User {
+	
+	private DBConnect connection = new DBConnect();
+	
+	
+	//insert
+	public String insertUser (String name, String NIC, String phoneNo, String email) {
+		
+		String output ="";
+		
+		try {
+			
+			Connection con = connection.getConnection();
+			
+			if(con == null) {
+				return "Error while connecting to database";
+			}
+			
+			//create a prepared statement
+			String query = "INSERT INTO users (`userID`, `userName`, `userNIC`, `userPhoneNo`, `userEmail`)"
+							+ "VALUES (?,?,?,?,?)";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			//binding values
+			preparedStmt.setInt(1, 0);
+			preparedStmt.setString(2, name);
+			preparedStmt.setString(3, NIC);
+			preparedStmt.setString(4, phoneNo);
+			preparedStmt.setString(5, email);
+			
+			//execute statement
+			preparedStmt.execute();
+			con.close();
+			
+			output = "User Inserted Successfully!";
+			
+		} catch (Exception e) {
+			
+			output = "Error while inserting user";
+			System.err.println(e.getMessage());
+		}
+		
+		return output;
+		
+	}
+	
+	//read all
+	public String readUsers() {
+
+		String output = "";
+		
+		try {
+			Connection con = connection.getConnection();
+			
+			if(con == null) {
+				return "Error while connecting to database";
+			}
+			
+			//prepare the html table to be displayed
+			output= "<table border=\"1\">"
+					+ "		<tr>"
+					+ "			<th>User ID</th>"
+					+ "			<th>User Name</th>"
+					+ "			<th>User NIC</th>"
+					+ "			<th>User Phone Number</th>"
+					+ "			<th>User Email</th>"
+					+ "		</tr>";
+			
+			String query = "SELECT * FROM users";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			while(rs.next()) {
+				String userID = Integer.toString(rs.getInt("userID"));
+				String userName = rs.getString("userName");
+				String userNIC = rs.getString("userNIC");
+				String userPhoneNo = rs.getString("userPhoneNo");
+				String userEmail  = rs.getString("userEmail");
+				
+				//add a row into html table
+				output += "<tr>";
+				output += 	"<td>" + userID +  "</td>";
+				output += 	"<td>" + userName +  "</td>";
+				output += 	"<td>" + userNIC +  "</td>";
+				output += 	"<td>" + userPhoneNo +  "</td>";
+				output += 	"<td>" + userEmail +  "</td>";
+				output += 	"</tr>";
+				
+			}
+			
+			con.close();
+			
+			//completing html table
+			output += 	"</table>";
+			
+		} 
+		catch (Exception e) 
+		{
+			output="Error while reading the users.";
+			System.err.println(e.getMessage());
+		}
+		
+		return output;
+	}
+	
+	//read 1
+	public String readUser(String ID) {
+
+		String output = "";
+		
+		try {
+			Connection con = connection.getConnection();
+			
+			if(con == null) {
+				return "Error while connecting to database";
+			}
+			
+			//prepare the html table to be displayed
+			output= "<table border=\"1\">"
+					+ "		<tr>"
+					+ "			<th>User ID</th>"
+					+ "			<th>User Name</th>"
+					+ "			<th>User NIC</th>"
+					+ "			<th>User Phone Number</th>"
+					+ "			<th>User Email</th>"
+					+ "		</tr>";
+			
+			String query = "SELECT * FROM users WHERE userID=" + ID;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			while(rs.next()) {
+				String userID = Integer.toString(rs.getInt("userID"));
+				String userName = rs.getString("userName");
+				String userNIC = rs.getString("userNIC");
+				String userPhoneNo = rs.getString("userPhoneNo");
+				String userEmail  = rs.getString("userEmail");
+				
+				//add a row into html table
+				output += "<tr>";
+				output += 	"<td>" + userID +  "</td>";
+				output += 	"<td>" + userName +  "</td>";
+				output += 	"<td>" + userNIC +  "</td>";
+				output += 	"<td>" + userPhoneNo +  "</td>";
+				output += 	"<td>" + userEmail +  "</td>";
+				output += 	"</tr>";
+				
+			}
+			
+			con.close();
+			
+			//completing html table
+			output += 	"</table>";
+			
+		} 
+		catch (Exception e) 
+		{
+			output="Error while reading the users.";
+			System.err.println(e.getMessage());
+		}
+		
+		return output;
+	}
+
+	//delete
+	public String deleteUser(String userID) {
+		String output="";
+		
+		try {
+			
+			Connection con = connection.getConnection();
+			if(con == null) {
+				return "Error while connecting to database for deleting";
+			}
+			
+			//create a prepared statement
+			String query = "DELETE FROM users WHERE userID=?";
+			
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			//binding value
+			preparedStmt.setInt(1, Integer.parseInt(userID));
+			
+			//execute the statement
+			preparedStmt.execute();
+			con.close();
+			
+			output = "Deleted successfully.";
+			
+		} catch (Exception e) {
+			output = "Error while deleting the user.";
+			System.err.println(e.getMessage());
+		}
+		
+		return output;
+	}
+	
+	//update
+	public String updateUser(String ID, String name, String NIC, String phoneNo, String email) {
+		
+		String output = "";
+		
+		try {
+			
+			
+			Connection con = connection.getConnection();
+			if(con == null) {
+				
+				return "Error connecting to database";
+			}
+			
+			String query = "UPDATE users SET userName=?, userNIC=?, userPhoneNo=?, userEmail=? where userID=? ";
+			
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			//binding values
+			//binding values
+			preparedStmt.setString(1, name);
+			preparedStmt.setString(2, NIC);
+			preparedStmt.setString(3, phoneNo);
+			preparedStmt.setString(4, email);
+			preparedStmt.setInt(5, Integer.parseInt(ID));
+			
+			 // execute the statement
+			 preparedStmt.execute();
+			 
+			 con.close();
+			 
+			 output = "User Updated successfully";
+			
+			
+		}catch(Exception e) {
+			
+			output = "Error while updating the user.";
+			System.err.println(e.getMessage());
+			 
+		}
+		
+		
+		return output;
+	}
+}
+
