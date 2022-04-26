@@ -67,4 +67,19 @@ CREATE TABLE IF NOT EXISTS `users` (
   `userPhoneNo` varchar(12) NOT NULL,
   `userEmail` varchar(20) NOT NULL,
   PRIMARY KEY (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payments`
+--
+
+DROP TABLE IF EXISTS `payments`;
+CREATE TABLE IF NOT EXISTS `payments` (
+  `paymentID` int(11) NOT NULL AUTO_INCREMENT,
+  `accountID` int(11) NOT NULL,
+  `amount` double NOT NULL,
+  `payMethod` varchar(10) NOT NULL,
+  `payDate` varchar(15) NOT NULL,
+  PRIMARY KEY (`paymentID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
